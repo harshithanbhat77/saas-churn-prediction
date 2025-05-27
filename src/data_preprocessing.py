@@ -19,7 +19,8 @@ def preprocess_data(df):
     for col in cat_cols:
         df[col] = le.fit_transform(df[col])
     
-    # Encode target
-    df['Churn'] = df['Churn'].map({'Yes': 1, 'No': 0})
+    # Encode target only if present
+    if 'Churn' in df.columns:
+        df['Churn'] = df['Churn'].map({'Yes': 1, 'No': 0})
     
     return df

@@ -6,6 +6,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 
 def train_model(df):
+    # Drop customerID if present
+    if 'customerID' in df.columns:
+        df = df.drop('customerID', axis=1)
     # Split the dataset
     X = df.drop("Churn", axis=1)
     y = df["Churn"]
@@ -29,3 +32,10 @@ def train_model(df):
     joblib.dump(model, 'models/logistic_model.pkl')
 
     return model
+
+if __name__ == "__main__":
+    # Load and preprocess data
+    from data_preprocessing import preprocess_data
+    df = pd.read_csv("data/telco_churn.csv")
+    df_cleaned = preprocess_data(df)
+    train_model(df_cleaned)
