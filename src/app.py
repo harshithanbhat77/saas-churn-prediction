@@ -5,6 +5,10 @@ from data_preprocessing import preprocess_data
 
 st.title("SaaS Churn Prediction App")
 
+st.markdown("""
+Enter customer details below to predict the likelihood of churn. The app will show the prediction and the model's confidence.
+""")
+
 # Collect user input for all features except customerID and Churn
 gender = st.selectbox('Gender', ['Female', 'Male'])
 senior_citizen = st.selectbox('Senior Citizen', [0, 1])
@@ -51,11 +55,22 @@ input_dict = {
 
 input_df = pd.DataFrame([input_dict])
 
+st.subheader("Input Summary")
+st.write(input_df)
+
 if st.button('Predict Churn'):
-    # Preprocess input
-    df_processed = preprocess_data(input_df)
-    # Load model
-    model = load_model()
-    # Predict
-    prediction = predict_new(model, df_processed)
-    st.write('Prediction:', 'Churn' if prediction[0] == 1 else 'Not Churn')
+    try:
+        # Preprocess input
+        df_processed = preprocess_data(input_df)
+        # Load model
+        model = load_model()
+        # Predict
+        prediction = predict_new(model, df_processed)
+        # Probability/confidence
+        if hasattr(model, "predict_proba"):
+            proba = model.predict_proba(df_processed)[0][1]
+            st.write(f"Prediction: {'Churn' if prediction[0] == 1 else 'Not Churn'} (Confidence: {proba:.2%})")
+        else:
+            st.write(f"Prediction: {'Churn' if prediction[0] == 1 else 'Not Churn'}")
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {e}")
