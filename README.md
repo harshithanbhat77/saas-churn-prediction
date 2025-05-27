@@ -38,5 +38,5 @@ This project predicts customer churn for a SaaS business using machine learning.
 
 ---
 
-**Author:** Harshitha N Bhat
+**Author:** Your Name
 **Date:** May 2025
